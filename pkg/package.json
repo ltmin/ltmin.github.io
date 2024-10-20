@@ -1,0 +1,15 @@
+{
+  "name": "totp-db",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "totp_db_bg.wasm",
+    "totp_db.js",
+    "totp_db.d.ts"
+  ],
+  "main": "totp_db.js",
+  "types": "totp_db.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
