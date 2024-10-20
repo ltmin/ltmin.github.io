@@ -52,5 +52,6 @@
       "src": "assets/512.png",
       "sizes": "512x512"
     }
-  ]
+  ],
+  "content_security_policy": "script-src 'self'; object-src 'self'"
 }
