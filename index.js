@@ -94,10 +94,12 @@ function mutateItems() {
         $(children[i]).replaceWith(genCodeItem(codes[i]));
 
         const node = $("#list-codes").children()[i];
-        $(node.querySelector(".x-edit")).off().click(() => handleEdit(node));
-        $(node.querySelector(".x-code-container")).off().click(() =>
-          handleCopy(node)
-        );
+        $(node.querySelector(".x-edit"))
+          .off()
+          .click(() => handleEdit(node));
+        $(node.querySelector(".x-code-container"))
+          .off()
+          .click(() => handleCopy(node));
       } else {
         const labelChildren = $(`#code-${codes[i].id} .x-code-label`);
         const codeChildren = $(`#code-${codes[i].id} .x-code-code`);
@@ -169,6 +171,8 @@ function btnItemDeleteLoading(loading) {
 }
 
 function gotoList() {
+  state.tab = "list";
+
   $("#tabs-list").show();
   $("#tabs-item-list > a").addClass(TAB_ACTIVE_CLASSES);
   $("#tabs-item").hide();
@@ -180,6 +184,8 @@ function gotoList() {
 }
 
 function gotoItem(curCode) {
+  state.tab = "item";
+
   $("#tabs-list").hide();
   $("#tabs-item-list > a").removeClass(TAB_ACTIVE_CLASSES);
   $("#tabs-item").show();
@@ -202,6 +208,8 @@ function gotoItem(curCode) {
 }
 
 function gotoAccountUnlock(isRegistered) {
+  state.tab = "account";
+
   $("#tabs-list").hide();
   $("#tabs-item-list > a").removeClass(TAB_ACTIVE_CLASSES);
   $("#tabs-item").hide();
@@ -220,6 +228,8 @@ function gotoAccountUnlock(isRegistered) {
 }
 
 function gotoAccountLogout() {
+  state.tab = "account";
+
   $("#tabs-list").hide();
   $("#tabs-item-list > a").removeClass(TAB_ACTIVE_CLASSES);
   $("#tabs-item").hide();
@@ -364,7 +374,18 @@ function bindJobs() {
     });
   }
 
+  function checkLogin() {
+    setInterval(async () => {
+      state.isLoggedIn = await is_logged_in();
+
+      if (!state.isLoggedIn && state.tab !== "account") {
+        gotoAccountUnlock(state.isRegistered);
+      }
+    }, 5000);
+  }
+
   refreshCodes();
+  checkLogin();
 }
 
 window.run = async function (w, d) {
