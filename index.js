@@ -210,6 +210,8 @@ function gotoItem(curCode) {
 function gotoAccountUnlock(isRegistered) {
   state.tab = "account";
 
+  $("#inp-password").val("");
+
   $("#tabs-list").hide();
   $("#tabs-item-list > a").removeClass(TAB_ACTIVE_CLASSES);
   $("#tabs-item").hide();
@@ -261,7 +263,7 @@ function handleRegisterOrLogin(e) {
           alert("Wrong password, please try again in 5 seconds.");
         }
       });
-  }, 10);
+  }, 50);
 }
 
 function handleLogout(e) {
@@ -279,7 +281,7 @@ function handleLogout(e) {
         // todo
       }
     });
-  }, 10);
+  }, 50);
 }
 
 function handleItem(e) {

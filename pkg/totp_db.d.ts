@@ -66,7 +66,7 @@ export interface InitOutput {
   readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
   readonly __wbindgen_export_2: WebAssembly.Table;
   readonly __wbindgen_add_to_stack_pointer: (a: number) => number;
-  readonly _dyn_core__ops__function__FnMut__A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__h4c64a882a50e3ae8: (a: number, b: number, c: number, d: number) => void;
+  readonly _dyn_core__ops__function__FnMut__A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__ha58ac7e1b3bc0afe: (a: number, b: number, c: number, d: number) => void;
   readonly _dyn_core__ops__function__FnMut__A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__hf4fb16ea2d39d34d: (a: number, b: number, c: number) => void;
   readonly _dyn_core__ops__function__Fn__A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__h21985599579c0101: (a: number, b: number, c: number) => void;
   readonly _dyn_core__ops__function__Fn_____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__h26be19e15cb03de3: (a: number, b: number) => void;
