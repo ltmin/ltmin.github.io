@@ -1,0 +1,53 @@
+{
+  "name": "Local TOTP",
+  "short_name": "Local TOTP",
+  "description": "Securely store TOTP on your divice locally",
+  "start_url": "/",
+  "scope": "https://ltmin.github.io/",
+  "theme_color": "#eeffee",
+  "background_color": "#eeffee",
+  "display": "standalone",
+  "screenshots": [
+    {
+      "src": "assets/account-unlock.png",
+      "sizes": "392x748",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Verify Account"
+    },
+    {
+      "src": "assets/totp-list.png",
+      "sizes": "390x791",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "View your TOTP"
+    },
+    {
+      "src": "assets/totp-create.png",
+      "sizes": "392x794",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Add new TOTP"
+    }
+  ],
+  "icons": [
+    {
+      "src": "assets/512.png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "assets/72.png",
+      "sizes": "72x72",
+      "purpose": "maskable"
+    },
+    {
+      "src": "assets/128.png",
+      "sizes": "128x128"
+    },
+    {
+      "src": "assets/256.png",
+      "sizes": "256x256"
+    }
+  ],
+  "content_security_policy": "script-src 'self'; object-src 'self'"
+}

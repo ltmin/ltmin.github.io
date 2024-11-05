@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="mobile-wep-app-capable" content="yes" />
+    <meta name="apple-mobile-wep-app-capable" content="yes" />
+    <link href="./output.css" rel="stylesheet" />
+    <title>Local TOTP</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" href="assets/favicon.ico" />
+    <script src="jquery.js"></script>
+  </head>
+  <body>
+    <div
+      class="flex flex-col h-lvh items-center justify-self-center"
+      style="max-height: 556px; max-width: 384px; margin: 0 auto"
+    >
+      <div class="flex-none px-8 w-full">
+        <div class="pt-8 max-w-80">
+          <ul class="grid grid-cols-3 grid-flow-row border-b-0 ps-0">
+            <li id="tabs-item-list" class="text-center">
+              <a
+                class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium uppercase leading-tight text-neutral-500 cursor-pointer hover:isolate hover:bg-neutral-100"
+                >List</a
+              >
+            </li>
+            <li id="tabs-item-item" class="text-center">
+              <a
+                class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium uppercase leading-tight text-neutral-500 cursor-pointer hover:isolate hover:bg-neutral-100"
+                >Item</a
+              >
+            </li>
+            <li id="tabs-item-account" class="text-center">
+              <a
+                class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium uppercase leading-tight text-neutral-500 cursor-pointer hover:isolate hover:bg-neutral-100"
+                >Account</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div
+        class="flex-1 items-center justify-center flex-col px-8 overflow-y-auto overflow-x-hidden h-full w-full"
+      >
+        <div class="pb-8 max-w-80 h-full">
+          <div class="mb-6 h-full">
+            <!-- TAB LIST -->
+            <div
+              class="transition-opacity duration-150 ease-linear h-full w-full"
+              id="tabs-list"
+              style="display: none"
+            >
+              <ul id="list-codes" class="divide-y divide-gray-100"></ul>
+            </div>
+            <!-- TAB ITEM -->
+            <div
+              class="transition-opacity duration-150 ease-linear h-full w-full"
+              id="tabs-item"
+              style="display: none"
+            >
+              <form id="form-item" class="max-w-sm mx-auto w-full">
+                <div class="mb-5">
+                  <label
+                    for="inp-item-label"
+                    class="block mb-2 text-sm font-medium text-gray-900"
+                    >Label</label
+                  >
+                  <input
+                    type="text"
+                    id="inp-item-label"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                  />
+                </div>
+                <div id="inp-item-secret-container" class="mb-5">
+                  <label
+                    for="inp-item-secret"
+                    class="block mb-2 text-sm font-medium text-gray-900"
+                    >Secret</label
+                  >
+                  <input
+                    type="password"
+                    autocomplete="none"
+                    id="inp-item-secret"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                  />
+                </div>
+                <button
+                  id="btn-item-submit"
+                  type="submit"
+                  class="w-full justify-center text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-0 focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 inline-flex items-center"
+                >
+                  <svg
+                    id="btn-item-submit-loading"
+                    class="inline w-4 h-4 me-3 text-white animate-spin"
+                    viewBox="0 0 100 101"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    style="display: none"
+                  >
+                    <path
+                      d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                      fill="#E5E7EB"
+                    />
+                    <path
+                      d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                  <span id="btn-item-submit-text">Update</span>
+                </button>
+
+                <button
+                  id="btn-item-delete"
+                  type="button"
+                  class="mt-5 w-full justify-center text-white bg-red-500 hover:bg-red-400 focus:ring-0 focus:ring-red-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 inline-flex items-center"
+                  style="display: none"
+                >
+                  <svg
+                    id="btn-item-delete-loading"
+                    class="inline w-4 h-4 me-3 text-white animate-spin"
+                    viewBox="0 0 100 101"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    style="display: none"
+                  >
+                    <path
+                      d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                      fill="#E5E7EB"
+                    />
+                    <path
+                      d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                  <span id="btn-item-submit-text">Delete</span>
+                </button>
+              </form>
+            </div>
+
+            <!-- TAB ACCOUNT -->
+            <div
+              class="transition-opacity duration-150 ease-linear h-full w-full"
+              id="tabs-account"
+              style="display: none"
+            >
+              <section
+                id="account-unlock"
+                class="flex flex-col items-center h-full w-full"
+              >
+                <div class="flex-1 flex flex-row items-center h-full w-full">
+                  <form id="form-unlock" class="max-w-sm mx-auto w-full">
+                    <div class="mb-5">
+                      <input
+                        id="inp-password"
+                        type="password"
+                        autocomplete="none"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                        required
+                      />
+                    </div>
+
+                    <button
+                      id="btn-unlock-submit"
+                      type="submit"
+                      class="w-full justify-center text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-0 focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 inline-flex items-center"
+                    >
+                      <svg
+                        id="btn-unlock-submit-loading"
+                        class="inline w-4 h-4 me-3 text-white animate-spin"
+                        viewBox="0 0 100 101"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        style="display: none"
+                      >
+                        <path
+                          d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                          fill="#E5E7EB"
+                        />
+                        <path
+                          d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                      <span id="btn-unlock-submit-text">Unlock</span>
+                    </button>
+                  </form>
+                </div>
+                <a
+                  class="flex-none cursor-pointer hover:text-orange-600"
+                  id="refresh-cache"
+                  >Refresh cache</a
+                >
+              </section>
+
+              <section id="account-loggedin">
+                <section id="account-manage">
+                  <button
+                    id="btn-backup"
+                    type="button"
+                    class="w-full justify-center text-blue bg-gray-100 hover:bg-gray-200 focus:ring-0 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 inline-flex items-center mb-3"
+                  >
+                    <span>Backup</span>
+                  </button>
+
+                  <button
+                    id="btn-to-restore"
+                    type="button"
+                    class="w-full justify-center text-blue bg-gray-100 hover:bg-gray-200 focus:ring-0 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 inline-flex items-center mb-3"
+                  >
+                    <span>Restore</span>
+                  </button>
+
+                  <button
+                    id="btn-to-edit-password"
+                    type="button"
+                    class="w-full justify-center text-blue bg-gray-100 hover:bg-gray-200 focus:ring-0 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 inline-flex items-center mb-3"
+                  >
+                    <span>Password</span>
+                  </button>
+
+                  <form id="form-logout" class="max-w-sm mx-auto">
+                    <button
+                      id="btn-logout"
+                      type="submit"
+                      class="w-full justify-center text-blue bg-gray-100 hover:bg-gray-200 focus:ring-0 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 inline-flex items-center mb-3"
+                    >
+                      <svg
+                        id="btn-logout-loading"
+                        class="inline w-4 h-4 me-3 text-white animate-spin"
+                        viewBox="0 0 100 101"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        style="display: none"
+                      >
+                        <path
+                          d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                          fill="#E5E7EB"
+                        />
+                        <path
+                          d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                      <span>Logout</span>
+                    </button>
+                  </form>
+                </section>
+
+                <section id="account-edit-password">
+                  <form id="form-edit-password" class="max-w-sm mx-auto">
+                    <div class="mb-5">
+                      <label
+                        for="inp-old-password"
+                        class="block mb-2 text-sm font-medium text-gray-900"
+                        >Old password</label
+                      >
+                      <input
+                        id="inp-old-password"
+                        type="password"
+                        autocomplete="none"
+                        name="oldPassword"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                        required
+                      />
+                    </div>
+
+                    <div class="mb-5">
+                      <label
+                        for="inp-new-password"
+                        class="block mb-2 text-sm font-medium text-gray-900"
+                        >New password</label
+                      >
+                      <input
+                        id="inp-new-password"
+                        type="password"
+                        autocomplete="none"
+                        name="newPassword"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                        required
+                      />
+                    </div>
+
+                    <div class="mb-5">
+                      <label
+                        for="inp-confirm-new-password"
+                        class="block mb-2 text-sm font-medium text-gray-900"
+                        >Confirm New password</label
+                      >
+                      <input
+                        id="inp-confirm-new-password"
+                        type="password"
+                        autocomplete="none"
+                        name="confirmNewPassword"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                        required
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      id="btn-edit-password"
+                      class="w-full justify-center text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-0 focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 inline-flex items-center"
+                    >
+                      <svg
+                        id="btn-edit-password-loading"
+                        class="inline w-4 h-4 me-3 text-white animate-spin"
+                        viewBox="0 0 100 101"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        style="display: none"
+                      >
+                        <path
+                          d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                          fill="#E5E7EB"
+                        />
+                        <path
+                          d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                      <span>Update</span>
+                    </button>
+                  </form>
+                  <button
+                    id="btn-edit-password-back"
+                    class="w-full justify-center text-blue bg-gray-100 hover:bg-gray-200 focus:ring-0 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 inline-flex items-center mt-3"
+                  >
+                    <span>Back</span>
+                  </button>
+                </section>
+
+                <section id="account-restore">
+                  <form id="form-restore" class="max-w-sm mx-auto">
+                    <div class="mb-5">
+                      <label
+                        for="inp-restore-file"
+                        class="block mb-2 text-sm font-medium text-gray-900"
+                        >File</label
+                      >
+                      <input
+                        id="inp-restore-file"
+                        type="file"
+                        name="file"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                        required
+                      />
+                    </div>
+
+                    <div class="mb-5">
+                      <label
+                        for="inp-restore-password"
+                        class="block mb-2 text-sm font-medium text-gray-900"
+                        >Password</label
+                      >
+                      <input
+                        id="inp-restore-password"
+                        type="password"
+                        autocomplete="none"
+                        name="password"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                        required
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      id="btn-restore"
+                      class="w-full justify-center text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-0 focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 inline-flex items-center"
+                    >
+                      <svg
+                        id="btn-restore-loading"
+                        class="inline w-4 h-4 me-3 text-white animate-spin"
+                        viewBox="0 0 100 101"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        style="display: none"
+                      >
+                        <path
+                          d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                          fill="#E5E7EB"
+                        />
+                        <path
+                          d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                      <span>Restore</span>
+                    </button>
+                  </form>
+                  <button
+                    id="btn-restore-back"
+                    class="w-full justify-center text-blue bg-gray-100 hover:bg-gray-200 focus:ring-0 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 inline-flex items-center mt-3"
+                  >
+                    <span>Back</span>
+                  </button>
+                </section>
+              </section>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="page-loading" class="flex w-full justify-center items-center">
+        <div class="flex flex-row">
+          <div class="w-5 h-5 rounded-full animate-pulse bg-blue-600"></div>
+          <div class="w-5 h-5 rounded-full animate-pulse bg-blue-600"></div>
+          <div class="w-5 h-5 rounded-full animate-pulse bg-blue-600"></div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="index.js" defer></script>
+
+    <script>
+      $("#refresh-cache").hide();
+      if ("serviceWorker" in navigator) {
+        $("#refresh-cache").show();
+        navigator.serviceWorker.register("sw.js");
+
+        $("#refresh-cache").click(async () => {
+          const registrations =
+            await navigator.serviceWorker.getRegistrations();
+          for (const registration of registrations) {
+            registration.unregister();
+          }
+
+          for (const name of await window.caches.keys()) {
+            await window.caches.delete(name);
+          }
+
+          setTimeout(() => {
+            window.location.reload(true);
+          }, 2000);
+        });
+      }
+    </script>
+  </body>
+</html>
