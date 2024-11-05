@@ -188,7 +188,7 @@
                   </form>
                 </div>
                 <a
-                  class="flex-none cursor-pointer hover:text-orange-600"
+                  class="flex-none cursor-pointer text-gray-400 hover:text-orange-600"
                   id="refresh-cache"
                   >Refresh cache</a
                 >
@@ -420,6 +420,13 @@
         navigator.serviceWorker.register("sw.js");
 
         $("#refresh-cache").click(async () => {
+          if (
+            !window.confirm(
+              "If you are offline, the app will not work anymore!"
+            )
+          ) {
+            return;
+          }
           const registrations =
             await navigator.serviceWorker.getRegistrations();
           for (const registration of registrations) {
